@@ -1,1 +1,1 @@
-A sample command-line application providing basic argument parsing with an entrypoint in `bin/`.
+Estructura para la resolución de Problemas de satisfacción de restricciones (CSP)
