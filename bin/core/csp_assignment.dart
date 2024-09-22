@@ -8,28 +8,30 @@ class Assignment<VAR extends Variable, VAL> extends Equatable {
   Assignment.copyFrom(Assignment<VAR, VAL> a) {
     variableToValueMap.addAll(a.variableToValueMap);
   }
+
   List<VAR> getVariables() => variableToValueMap.keys.toList();
 
-  VAL? getValue(VAR v) {
-    return variableToValueMap[v];
+  VAL? getValue(VAR variable) {
+    return variableToValueMap[variable];
   }
 
-  VAL add(VAR v, VAL value) {
-    return variableToValueMap.putIfAbsent(v, () => value);
+  VAL add(VAR variable, VAL value) {
+    remove(variable);
+    return variableToValueMap.putIfAbsent(variable, () => value);
   }
 
-  VAL? remove(VAR v) {
-    return variableToValueMap.remove(v);
+  VAL? remove(VAR variable) {
+    return variableToValueMap.remove(variable);
   }
 
-  bool contains(VAR v) => variableToValueMap.containsKey(v);
+  bool contains(VAR variable) => variableToValueMap.containsKey(variable);
 
   bool isConsistent(List<Constraint<VAR, VAL>> constraints) {
     return constraints.every((cons) => cons.isSatisfiedWith(this));
   }
 
-  bool isComplete(List<VAR> vars) {
-    return vars.every((v) => this.contains(v));
+  bool isComplete(List<VAR> variables) {
+    return variables.every((variable) => this.contains(variable));
   }
 
   bool isSolution(Csp<VAR, VAL> csp) {
@@ -38,6 +40,11 @@ class Assignment<VAR extends Variable, VAL> extends Equatable {
 
   bool isEmpty() {
     return variableToValueMap.isEmpty;
+  }
+
+  @override
+  String toString() {
+    return variableToValueMap.toString();
   }
 
   @override

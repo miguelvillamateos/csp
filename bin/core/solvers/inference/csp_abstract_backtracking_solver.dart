@@ -1,5 +1,5 @@
-import '../csp.dart';
-import 'inference/csp_inference_log.dart';
+import '../../csp.dart';
+import 'csp_inference_log.dart';
 
 abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
     extends CspSolver<VAR, VAL> {
@@ -13,10 +13,10 @@ abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
       Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment);
 
   Iterable<VAL> orderDomainValues(
-      Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR v);
+      Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR variable);
 
   InferenceLog<VAR, VAL> inference(
-      Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR v);
+      Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR variable);
 
   Assignment<VAR, VAL> backtrack(
       Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment) {
@@ -25,12 +25,12 @@ abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
     if (assignment.isComplete(csp.variables)) {
       result = assignment;
     } else {
-      VAR v = selectUnassignedVariable(csp, assignment);
-      for (VAL value in orderDomainValues(csp, assignment, v)) {
-        assignment.add(v, value);
-        fireStateChanged(csp, assignment, v);
-        if (assignment.isConsistent(csp.getConstraints(v))) {
-          InferenceLog<VAR, VAL> log = inference(csp, assignment, v);
+      VAR variable = selectUnassignedVariable(csp, assignment);
+      for (VAL value in orderDomainValues(csp, assignment, variable)) {
+        assignment.add(variable, value);
+        fireStateChanged(csp, assignment, variable);
+        if (assignment.isConsistent(csp.getConstraints(variable))) {
+          InferenceLog<VAR, VAL> log = inference(csp, assignment, variable);
           if (!log.isEmpty()) {
             fireStateChanged(csp, null, null);
             if (!log.inconsistencyFound()) {
@@ -41,7 +41,7 @@ abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
             }
             log.undo(csp);
           }
-          assignment.remove(v);
+          assignment.remove(variable);
         }
       }
     }

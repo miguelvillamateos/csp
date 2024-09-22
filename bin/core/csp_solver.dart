@@ -1,10 +1,21 @@
 part of './csp.dart';
 
 abstract class CspSolver<VAR extends Variable, VAL> {
-  List<CspListener<VAR, VAL>> listeners = <CspListener<VAR, VAL>>[];
+  final List<CspListener<VAR, VAL>> listeners = [];
+
+  CspSolver();
+
   Assignment<VAR, VAL> solve(Csp<VAR, VAL> csp);
 
-  fireStateChanged(
+  void addCspListener(CspListener<VAR, VAL> listener) {
+    listeners.add(listener);
+  }
+
+  void removeCspListener(CspListener<VAR, VAL> listener) {
+    listeners.remove(listener);
+  }
+
+  void fireStateChanged(
       Csp<VAR, VAL> csp, Assignment<VAR, VAL>? assignment, VAR? variable) {
     for (CspListener<VAR, VAL> listener in listeners) {
       listener.stateChanged(csp, assignment, variable);

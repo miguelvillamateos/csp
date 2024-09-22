@@ -13,6 +13,10 @@ class Domain<VAL> extends Equatable {
 
   bool contains(VAL value) => values.contains(value);
 
+  void add(VAL value) {
+    values.add(value);
+  }
+
   @override
   String toString() {
     return values.toString();
