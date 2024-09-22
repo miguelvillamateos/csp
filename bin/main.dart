@@ -12,10 +12,10 @@ ArgParser buildParser() {
       help: 'Print this usage information.',
     )
     ..addFlag(
-      'map',
-      abbr: 'm',
+      'example',
+      abbr: 'e',
       negatable: false,
-      help: 'Show map sample',
+      help: 'Show sample n',
     )
     ..addFlag(
       'version',
@@ -29,8 +29,23 @@ void printUsage(ArgParser argParser) {
   print(argParser.usage);
 }
 
+void showSample(String id) {
+  switch (id) {
+    case '1':
+      showMapSample();
+      break;
+    default:
+      print("Invalid example number");
+      break;
+  }
+}
+
 void showMapSample() {
   ///    Ejemplo del coloreado de mapa
+
+  print("---------------------");
+  print("Map coloring example");
+  print("---------------------");
 
   final Variable NSW = Variable(name: "NSW");
   final Variable NT = Variable(name: "NT");
@@ -83,15 +98,14 @@ void showMapSample() {
   solver.addCspListener(listener);
 
   Assignment solution = solver.solve(csp);
-  print(" ---> ");
+  print("Solution ---> ");
   print(solution.toString());
 }
 
 void main(List<String> arguments) {
   final ArgParser argParser = buildParser();
   try {
-    final ArgResults results = argParser.parse(arguments);
-    bool verbose = false;
+    final ArgResults results = argParser.parse(arguments);    
 
     // Process the parsed arguments.
     if (results.wasParsed('help')) {
@@ -102,13 +116,17 @@ void main(List<String> arguments) {
       print('csp version: $version');
       return;
     }
-    if (results.wasParsed('map')) {
-      showMapSample();
-      return;
+    if (results.wasParsed('example')) {
+      if (results.rest.isNotEmpty) {
+        showSample(results.rest[0]);
+        return;
+      } else {
+        print('Missing example number');
+      }
     }
 
     // Act on the arguments provided.
-    print('Positional arguments: ${results.rest}');
+    print('Arguments: ${results.rest}');
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
