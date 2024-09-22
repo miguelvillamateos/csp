@@ -1,4 +1,4 @@
-import '../../csp.dart';
+part of '../../csp.dart';
 
 class StringLessThanConstraint<VAR extends Variable, String>
     extends BinaryConstraint<VAR, String> {

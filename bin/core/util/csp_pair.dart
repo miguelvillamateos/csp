@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of '../csp.dart';
 
 class Pair<X, Y> extends Equatable {
   final X a;

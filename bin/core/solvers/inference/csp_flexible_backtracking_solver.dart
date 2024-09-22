@@ -1,8 +1,4 @@
-import '../../csp.dart';
-import 'csp_heuristics.dart';
-import 'strategies/csp_abstract_inference_strategy.dart';
-import 'csp_abstract_backtracking_solver.dart';
-import 'csp_inference_log.dart';
+part of '../../csp.dart';
 
 class FlexibleBacktrackingSolver<VAR extends Variable, VAL>
     extends AbstractBacktrackingSolver<VAR, VAL> {

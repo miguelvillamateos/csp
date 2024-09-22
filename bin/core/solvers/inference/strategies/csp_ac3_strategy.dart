@@ -1,9 +1,4 @@
-import 'dart:collection';
-
-import '../../../csp.dart';
-import '../csp_inference_log.dart';
-import '../csp_domain_log.dart';
-import 'csp_abstract_inference_strategy.dart';
+part of '../../../csp.dart';
 
 class AC3Strategy<VAR extends Variable, VAL>
     extends AbstractInferenceStrategy<VAR, VAL> {

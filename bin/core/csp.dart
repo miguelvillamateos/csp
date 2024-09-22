@@ -9,11 +9,28 @@ part 'csp_domain.dart';
 part 'csp_listener.dart';
 part 'csp_solver.dart';
 part 'csp_variable.dart';
+part 'util/csp_pair.dart';
 part 'constraints/csp_binary_constraint.dart';
 part 'constraints/csp_not_equal_constraint.dart';
 part 'constraints/csp_equal_constraint.dart';
 part 'constraints/csp_less_than_constraint.dart';
 part 'constraints/csp_greater_than_constraint copy.dart';
+part 'constraints/number/csp_number_greater_than_constraint.dart';
+part 'constraints/number/csp_number_less_than_constraint.dart';
+part 'constraints/string/csp_string_greater_than_constraint.dart';
+part 'constraints/string/csp_string_less_than_constraint.dart';
+part 'solvers/inference/csp_inference_log.dart';
+part 'solvers/inference/csp_domain_log.dart';
+part 'solvers/inference/heuristics/csp_degree_heuristic.dart';
+part 'solvers/inference/heuristics/csp_heuristics.dart';
+part 'solvers/inference/heuristics/csp_least_constraining_value_heuristic.dart';
+part 'solvers/inference/heuristics/csp_minimum_remaining_values_heuristic.dart';
+part 'solvers/inference/strategies/csp_abstract_inference_strategy.dart';
+part 'solvers/inference/strategies/csp_ac3_strategy.dart';
+part 'solvers/inference/strategies/csp_value_ordering_strategy.dart';
+part 'solvers/inference/strategies/csp_variable_selection_strategy.dart';
+part 'solvers/inference/csp_abstract_backtracking_solver.dart';
+part 'solvers/inference/csp_flexible_backtracking_solver.dart';
 
 class Csp<VAR extends Variable, VAL> {
   final List<VAR> variables;

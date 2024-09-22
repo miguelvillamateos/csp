@@ -1,4 +1,4 @@
-import '../../csp.dart';
+part of '../../../csp.dart';
 
 abstract class VariableSelectionStrategy<VAR extends Variable, VAL> {
   const VariableSelectionStrategy();

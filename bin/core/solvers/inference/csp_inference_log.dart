@@ -1,4 +1,4 @@
-import '../../csp.dart';
+part of '../../csp.dart';
 
 abstract class InferenceLog<VAR extends Variable, VAL> {
   bool isEmpty();

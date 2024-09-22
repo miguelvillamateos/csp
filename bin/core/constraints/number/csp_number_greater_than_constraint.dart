@@ -1,4 +1,4 @@
-import '../../csp.dart';
+part of '../../csp.dart';
 
 class NumberGreaterThanConstraint<VAR extends Variable, NUMBER extends num>
     extends BinaryConstraint<VAR, NUMBER> {

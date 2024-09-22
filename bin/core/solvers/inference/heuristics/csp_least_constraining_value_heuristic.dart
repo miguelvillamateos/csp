@@ -1,6 +1,4 @@
-import '../../csp.dart';
-import '../../util/csp_value_int_pair.dart';
-import 'csp_value_ordering_strategy.dart';
+part of '../../../csp.dart';
 
 class LeastConstrainingValueHeuristic<VAR extends Variable, VAL>
     extends ValueOrderingStrategy<VAR, VAL> {
@@ -9,10 +7,10 @@ class LeastConstrainingValueHeuristic<VAR extends Variable, VAL>
   @override
   List<VAL> apply(
       Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR variable) {
-    List<ValueIntPair<VAL>> pairs = [];
+    List<Pair<VAL,int>> pairs = [];
     for (VAL value in csp.getDomain(variable).values) {
       int num = countLostValues(csp, assignment, variable, value);
-      pairs.add(ValueIntPair<VAL>(value, num));
+      pairs.add(Pair<VAL,int>(value, num));
     }
 
     pairs.sort((a, b) => a.getSecond().compareTo(b.getSecond()));

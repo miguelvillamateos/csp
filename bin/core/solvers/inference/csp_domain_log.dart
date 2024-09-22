@@ -1,6 +1,5 @@
-import '../../csp.dart';
-import '../../util/csp_pair.dart';
-import 'csp_inference_log.dart';
+part of '../../csp.dart';
+
 
 class DomainLog<VAR extends Variable, VAL> implements InferenceLog<VAR, VAL> {
   List<Pair<VAR, Domain<VAL>>> savedDomains = [];

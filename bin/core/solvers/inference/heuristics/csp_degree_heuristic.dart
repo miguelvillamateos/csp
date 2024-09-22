@@ -1,5 +1,5 @@
-import '../../csp.dart';
-import 'csp_variable_selection_strategy.dart';
+part of '../../../csp.dart';
+
 
 class DegreeHeuristic<VAR extends Variable, VAL>
     extends VariableSelectionStrategy<VAR, VAL> {

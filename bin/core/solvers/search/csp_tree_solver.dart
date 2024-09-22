@@ -17,7 +17,6 @@ class CspTreeSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
 
       topologicalSort(csp, root, orderedVars, parentConstraints);
       if (csp.getDomain(root).values.isNotEmpty) {
-        // csp = csp.copyDomains(); // do not change the original Csp!
         for (int i = orderedVars.length - 1; i > 0; i--) {
           VAR variable = orderedVars[i];
           if (parentConstraints.containsKey(variable)) {

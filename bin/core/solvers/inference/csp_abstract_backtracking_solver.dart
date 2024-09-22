@@ -1,5 +1,5 @@
-import '../../csp.dart';
-import 'csp_inference_log.dart';
+part of '../../csp.dart';
+
 
 abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
     extends CspSolver<VAR, VAL> {

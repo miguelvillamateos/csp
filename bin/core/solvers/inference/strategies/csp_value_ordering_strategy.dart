@@ -1,4 +1,4 @@
-import '../../csp.dart';
+part of '../../../csp.dart';
 
 abstract class ValueOrderingStrategy<VAR extends Variable, VAL> {
   const ValueOrderingStrategy();

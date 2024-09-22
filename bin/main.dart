@@ -1,10 +1,5 @@
 import 'package:args/args.dart';
 import 'core/csp.dart';
-import 'core/solvers/inference/csp_heuristics.dart';
-import 'core/solvers/inference/csp_least_constraining_value_heuristic.dart';
-import 'core/solvers/inference/csp_minimum_remaining_values_heuristic.dart';
-import 'core/solvers/inference/csp_flexible_backtracking_solver.dart';
-import 'core/solvers/inference/strategies/csp_ac3_strategy.dart';
 
 const String version = '0.0.1';
 

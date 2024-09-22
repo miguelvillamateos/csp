@@ -1,5 +1,4 @@
-import '../../../csp.dart';
-import '../csp_inference_log.dart';
+part of '../../../csp.dart';
 
 abstract class AbstractInferenceStrategy<VAR extends Variable, VAL> {
   const AbstractInferenceStrategy();
