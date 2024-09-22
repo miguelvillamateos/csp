@@ -14,7 +14,7 @@ part 'constraints/csp_binary_constraint.dart';
 part 'constraints/csp_not_equal_constraint.dart';
 part 'constraints/csp_equal_constraint.dart';
 part 'constraints/csp_less_than_constraint.dart';
-part 'constraints/csp_greater_than_constraint copy.dart';
+part 'constraints/csp_greater_than_constraint.dart';
 part 'constraints/number/csp_number_greater_than_constraint.dart';
 part 'constraints/number/csp_number_less_than_constraint.dart';
 part 'constraints/string/csp_string_greater_than_constraint.dart';

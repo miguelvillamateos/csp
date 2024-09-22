@@ -34,10 +34,24 @@ void showSample(String id) {
     case '1':
       showMapSample();
       break;
+    case '2':
+      showTimetableSample();
+      break;
     default:
       print("Invalid example number");
       break;
   }
+}
+
+void showTimetableSample() {
+  print("---------------------");
+  print("Timetable example");
+  print("---------------------");
+
+  
+
+
+
 }
 
 void showMapSample() {
