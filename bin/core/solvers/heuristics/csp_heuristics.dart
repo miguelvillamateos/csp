@@ -1,4 +1,4 @@
-part of '../../../csp.dart';
+part of '../../csp.dart';
 
 class Heuristics<VAR extends Variable, VAL> {
   final VariableSelectionStrategy<VAR, VAL> variableSelectionStrategy;

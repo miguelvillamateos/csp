@@ -21,16 +21,16 @@ part 'constraints/string/csp_string_greater_than_constraint.dart';
 part 'constraints/string/csp_string_less_than_constraint.dart';
 part 'solvers/inference/csp_inference_log.dart';
 part 'solvers/inference/csp_domain_log.dart';
-part 'solvers/inference/heuristics/csp_degree_heuristic.dart';
-part 'solvers/inference/heuristics/csp_heuristics.dart';
-part 'solvers/inference/heuristics/csp_least_constraining_value_heuristic.dart';
-part 'solvers/inference/heuristics/csp_minimum_remaining_values_heuristic.dart';
-part 'solvers/inference/strategies/csp_abstract_inference_strategy.dart';
-part 'solvers/inference/strategies/csp_ac3_strategy.dart';
-part 'solvers/inference/strategies/csp_value_ordering_strategy.dart';
-part 'solvers/inference/strategies/csp_variable_selection_strategy.dart';
-part 'solvers/inference/csp_abstract_backtracking_solver.dart';
-part 'solvers/inference/csp_flexible_backtracking_solver.dart';
+part 'solvers/heuristics/csp_degree_heuristic.dart';
+part 'solvers/heuristics/csp_heuristics.dart';
+part 'solvers/heuristics/csp_least_constraining_value_heuristic.dart';
+part 'solvers/heuristics/csp_minimum_remaining_values_heuristic.dart';
+part 'solvers/strategies/csp_abstract_inference_strategy.dart';
+part 'solvers/strategies/csp_ac3_strategy.dart';
+part 'solvers/strategies/csp_value_ordering_strategy.dart';
+part 'solvers/strategies/csp_variable_selection_strategy.dart';
+part 'solvers/search/csp_abstract_backtracking_solver.dart';
+part 'solvers/search/csp_flexible_backtracking_solver.dart';
 
 class Csp<VAR extends Variable, VAL> {
   final List<VAR> variables;

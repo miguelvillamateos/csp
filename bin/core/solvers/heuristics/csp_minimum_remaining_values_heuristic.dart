@@ -1,4 +1,4 @@
-part of '../../../csp.dart';
+part of '../../csp.dart';
 
 class MinimumRemainingValuesHeuristic<VAR extends Variable, VAL>
     extends VariableSelectionStrategy<VAR, VAL> {

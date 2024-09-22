@@ -1,4 +1,4 @@
-part of '../../../csp.dart';
+part of '../../csp.dart';
 
 
 class DegreeHeuristic<VAR extends Variable, VAL>

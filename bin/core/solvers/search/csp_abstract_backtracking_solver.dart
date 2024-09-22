@@ -1,6 +1,5 @@
 part of '../../csp.dart';
 
-
 abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
     extends CspSolver<VAR, VAL> {
   @override
@@ -28,12 +27,13 @@ abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
       VAR variable = selectUnassignedVariable(csp, assignment);
       for (VAL value in orderDomainValues(csp, assignment, variable)) {
         assignment.add(variable, value);
-        fireStateChanged(csp, assignment, variable);
+        fireStateChanged(csp, assignment, variable, "Added ($variable,$value)");
         if (assignment.isConsistent(csp.getConstraints(variable))) {
           InferenceLog<VAR, VAL> log = inference(csp, assignment, variable);
           if (!log.isEmpty()) {
-            fireStateChanged(csp, null, null);
+            fireStateChanged(csp, null, null, "Inference");
             if (!log.inconsistencyFound()) {
+              fireStateChanged(csp, null, null, "inconsistencyFound");
               result = backtrack(csp, assignment);
               if (!result.isEmpty()) {
                 break;
@@ -41,6 +41,7 @@ abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
             }
             log.undo(csp);
           }
+        } else {
           assignment.remove(variable);
         }
       }

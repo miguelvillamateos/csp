@@ -16,9 +16,9 @@ abstract class CspSolver<VAR extends Variable, VAL> {
   }
 
   void fireStateChanged(
-      Csp<VAR, VAL> csp, Assignment<VAR, VAL>? assignment, VAR? variable) {
+      Csp<VAR, VAL> csp, Assignment<VAR, VAL>? assignment, VAR? variable,String info) {
     for (CspListener<VAR, VAL> listener in listeners) {
-      listener.stateChanged(csp, assignment, variable);
+      listener.stateChanged(csp, assignment, variable,info);
     }
   }
 }

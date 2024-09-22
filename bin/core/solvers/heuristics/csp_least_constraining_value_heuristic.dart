@@ -1,4 +1,4 @@
-part of '../../../csp.dart';
+part of '../../csp.dart';
 
 class LeastConstrainingValueHeuristic<VAR extends Variable, VAL>
     extends ValueOrderingStrategy<VAR, VAL> {

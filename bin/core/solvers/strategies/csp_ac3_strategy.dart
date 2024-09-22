@@ -1,7 +1,8 @@
-part of '../../../csp.dart';
+part of '../../csp.dart';
 
 class AC3Strategy<VAR extends Variable, VAL>
     extends AbstractInferenceStrategy<VAR, VAL> {
+      
   @override
   InferenceLog<VAR, VAL> initialApply(Csp<VAR, VAL> csp) {
     DoubleLinkedQueue<VAR> queue = DoubleLinkedQueue();

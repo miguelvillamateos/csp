@@ -25,14 +25,15 @@ class CspTreeSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
               VAR? parent = csp.getNeighbor(variable, constraint);
               if (parent != null) {
                 if (makeArcConsistent(parent, variable, constraint, csp)) {
-                  fireStateChanged(csp, null, parent);
+                  fireStateChanged(csp, null, parent, "makeArcConsistent");
                   if (!csp.getDomain(parent).isEmpty()) {
                     for (VAR variable in orderedVars) {
                       for (VAL value in csp.getDomain(variable).values) {
                         assignment.add(variable, value);
                         if (assignment
                             .isConsistent(csp.getConstraints(variable))) {
-                          fireStateChanged(csp, assignment, variable);
+                          fireStateChanged(
+                              csp, assignment, variable, "Consistent");
                           break;
                         }
                       }

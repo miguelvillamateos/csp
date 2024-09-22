@@ -12,7 +12,7 @@ class FlexibleBacktrackingSolver<VAR extends Variable, VAL>
   Assignment<VAR, VAL> solve(Csp<VAR, VAL> csp) {
     InferenceLog log = inferenceStrategy.initialApply(csp);
     if (!log.isEmpty()) {
-      fireStateChanged(csp, null, null);
+      fireStateChanged(csp, null, null, "Initial inference");
       if (log.inconsistencyFound()) return Assignment();
     }
     return super.solve(csp);

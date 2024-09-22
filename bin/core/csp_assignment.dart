@@ -44,7 +44,9 @@ class Assignment<VAR extends Variable, VAL> extends Equatable {
 
   @override
   String toString() {
-    return variableToValueMap.toString();
+    return variableToValueMap.isEmpty
+        ? "Empty assigment"
+        : variableToValueMap.toString();
   }
 
   @override
