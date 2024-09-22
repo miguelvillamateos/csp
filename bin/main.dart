@@ -63,11 +63,12 @@ void showMapSample() {
   Domain<String> domain = Domain<String>(values: [RED, GREEN, BLUE]);
 
   final Csp<Variable, String> csp =
-      Csp<Variable, String>(variables: [NT, SA, V, T, NSW, Q, WA]);
+      Csp<Variable, String>(variables: [SA, NT, V, T, NSW, Q, WA]);
 
   for (Variable variable in csp.variables) {
     csp.setDomain(variable, domain);
   }
+
   csp.addConstraint(NotEqualConstraint<Variable, String>(WA, NT));
   csp.addConstraint(NotEqualConstraint<Variable, String>(WA, SA));
   csp.addConstraint(NotEqualConstraint<Variable, String>(NT, SA));
@@ -77,6 +78,9 @@ void showMapSample() {
   csp.addConstraint(NotEqualConstraint<Variable, String>(SA, V));
   csp.addConstraint(NotEqualConstraint<Variable, String>(Q, NSW));
   csp.addConstraint(NotEqualConstraint<Variable, String>(NSW, V));
+  // SA = RED
+  csp.setDomain(SA, Domain<String>(values: [RED]));
+  csp.setDomain(T, Domain<String>(values: [GREEN]));
 
   AC3Strategy<Variable, String> ac3strategy = AC3Strategy<Variable, String>();
   MinimumRemainingValuesHeuristic<Variable, String>
@@ -98,14 +102,17 @@ void showMapSample() {
   solver.addCspListener(listener);
 
   Assignment solution = solver.solve(csp);
-  print("Solution ---> ");
-  print(solution.toString());
+  if (solution.isSolution(csp)) {
+    print("Solution ---> ${solution.toString()}");
+  } else {
+    print("Partial solution ---> ${solution.toString()}");
+  }
 }
 
 void main(List<String> arguments) {
   final ArgParser argParser = buildParser();
   try {
-    final ArgResults results = argParser.parse(arguments);    
+    final ArgResults results = argParser.parse(arguments);
 
     // Process the parsed arguments.
     if (results.wasParsed('help')) {

@@ -10,5 +10,10 @@ class Pair<X, Y> extends Equatable {
   Y getSecond() => b;
 
   @override
+  String toString() {
+    return "(${a.toString()},${b.toString()})";
+  }
+
+  @override
   List<Object?> get props => [a, b];
 }

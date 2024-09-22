@@ -13,7 +13,9 @@ class FlexibleBacktrackingSolver<VAR extends Variable, VAL>
     InferenceLog log = inferenceStrategy.initialApply(csp);
     if (!log.isEmpty()) {
       fireStateChanged(csp, null, null, "Initial inference");
-      if (log.inconsistencyFound()) return Assignment();
+      if (log.inconsistencyFound()) {
+        return Assignment();
+      }
     }
     return super.solve(csp);
   }
@@ -24,12 +26,14 @@ class FlexibleBacktrackingSolver<VAR extends Variable, VAL>
     List<VAR> vars =
         csp.variables.where((v) => !assignment.contains(v)).toList();
     vars = heuristics.variableSelectionStrategy.apply(csp, vars);
+    print("selectUnassignedVariable --> ${vars[0].toString()}");
     return vars[0];
   }
 
   @override
   List<VAL> orderDomainValues(
       Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR variable) {
+    print("orderDomainValues --> ");
     return heuristics.valueOrderingStrategy.apply(csp, assignment, variable);
   }
 

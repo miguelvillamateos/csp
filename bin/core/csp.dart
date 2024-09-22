@@ -59,7 +59,11 @@ class Csp<VAR extends Variable, VAL> {
   }
 
   void setDomain(VAR variable, Domain<VAL> domain) {
-    variableToDomainMap.putIfAbsent(variable, () => domain);
+    if (variableToDomainMap.containsKey(variable)) {
+      variableToDomainMap[variable] = domain;
+    } else {
+      variableToDomainMap.putIfAbsent(variable, () => domain);
+    }
   }
 
   bool removeValueFromDomain(VAR variable, VAL value) {

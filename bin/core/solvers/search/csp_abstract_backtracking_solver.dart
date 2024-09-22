@@ -20,10 +20,13 @@ abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
   Assignment<VAR, VAL> backtrack(
       Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment) {
     Assignment<VAR, VAL> result = Assignment<VAR, VAL>();
+    print("backtrack -->");
 
     if (assignment.isComplete(csp.variables)) {
+      print("${assignment.toString()} --> is complete");
       result = assignment;
     } else {
+      print("${assignment.toString()} --> is not Complete");
       VAR variable = selectUnassignedVariable(csp, assignment);
       for (VAL value in orderDomainValues(csp, assignment, variable)) {
         assignment.add(variable, value);
@@ -32,18 +35,17 @@ abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL>
           InferenceLog<VAR, VAL> log = inference(csp, assignment, variable);
           if (!log.isEmpty()) {
             fireStateChanged(csp, null, null, "Inference");
-            if (!log.inconsistencyFound()) {
-              fireStateChanged(csp, null, null, "inconsistencyFound");
-              result = backtrack(csp, assignment);
-              if (!result.isEmpty()) {
-                break;
-              }
-            }
-            log.undo(csp);
           }
-        } else {
-          assignment.remove(variable);
+          if (!log.inconsistencyFound()) {
+            fireStateChanged(csp, null, null, "NO inconsistencyFound ");
+            result = backtrack(csp, assignment);
+            if (!result.isEmpty()) {
+              break;
+            }
+          }
+          log.undo(csp);
         }
+        assignment.remove(variable);
       }
     }
     return result;
