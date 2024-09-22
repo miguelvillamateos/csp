@@ -52,16 +52,16 @@ void showMapSample() {
 
   for (Variable variable in csp.variables) {
     csp.setDomain(variable, domain);
-    csp.addConstraint(NotEqualConstraint<Variable, String>(WA, NT));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(WA, SA));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(NT, SA));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(NT, Q));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(SA, Q));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(SA, NSW));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(SA, V));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(Q, NSW));
-    csp.addConstraint(NotEqualConstraint<Variable, String>(NSW, V));
   }
+  csp.addConstraint(NotEqualConstraint<Variable, String>(WA, NT));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(WA, SA));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(NT, SA));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(NT, Q));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(SA, Q));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(SA, NSW));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(SA, V));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(Q, NSW));
+  csp.addConstraint(NotEqualConstraint<Variable, String>(NSW, V));
 
   AC3Strategy<Variable, String> ac3strategy = AC3Strategy<Variable, String>();
   MinimumRemainingValuesHeuristic<Variable, String>
