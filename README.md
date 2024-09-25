@@ -31,3 +31,10 @@ flowchart LR
     NSW <--> V
     
 ```
+
+Ejemplo 2 : ordenación de tareas en el tiempo
+- Se definen las Variables como las tareas que han de gestionarse
+- Se definen los Valores como estructuras que contienen un principio y un final (fecha y hora)
+- Se establece el dominio de cada variable con los Valores que son admitidos (rango de horas)
+- Se definen las restricciones de forma que cada tarea comence despues de que haya terminado la anterior y que ninguna tarea coincida en el tiempo con otra.
+  
