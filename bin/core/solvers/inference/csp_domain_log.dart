@@ -1,8 +1,11 @@
+///
+/// Clase base para para la definición de escuchadores
+///
 part of '../../csp.dart';
 
-
-class DomainLog<VAR extends Variable, VAL> implements InferenceLog<VAR, VAL> {
-  List<Pair<VAR, Domain<VAL>>> savedDomains = [];
+class DomainLog<VAR extends CspVariable, VAL>
+    implements InferenceLog<VAR, VAL> {
+  List<Pair<VAR, CspDomain<VAL>>> savedDomains = [];
   List<VAR> affectedVariables = [];
   bool emptyDomainObserved = false;
 
@@ -13,9 +16,9 @@ class DomainLog<VAR extends Variable, VAL> implements InferenceLog<VAR, VAL> {
     affectedVariables.clear();
   }
 
-  void storeDomainFor(VAR variable, Domain<VAL> domain) {
+  void storeDomainFor(VAR variable, CspDomain<VAL> domain) {
     if (!affectedVariables.contains(variable)) {
-      savedDomains.add(Pair<VAR, Domain<VAL>>(variable, domain));
+      savedDomains.add(Pair<VAR, CspDomain<VAL>>(variable, domain));
       affectedVariables.add(variable);
     }
   }
@@ -45,14 +48,14 @@ class DomainLog<VAR extends Variable, VAL> implements InferenceLog<VAR, VAL> {
     return emptyDomainObserved;
   }
 
-  List<Pair<VAR, Domain<VAL>>> getSavedDomains() {
+  List<Pair<VAR, CspDomain<VAL>>> getSavedDomains() {
     return savedDomains;
   }
 
   @override
   String toString() {
     String result = "";
-    for (Pair<VAR, Domain<VAL>> pair in savedDomains) {
+    for (Pair<VAR, CspDomain<VAL>> pair in savedDomains) {
       result += (pair.getFirst().toString()) +
           ("=") +
           (pair.getSecond().toString()) +

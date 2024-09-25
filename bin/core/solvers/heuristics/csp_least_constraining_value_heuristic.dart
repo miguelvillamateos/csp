@@ -1,12 +1,17 @@
+///
+/// Clase base para para la definición de la heurística de ordenación de valores
+/// que asigna el siguiente valor que produce el mayor número de valores
+/// consistentes de variables vecinas
+///
 part of '../../csp.dart';
 
-class LeastConstrainingValueHeuristic<VAR extends Variable, VAL>
+class LeastConstrainingValueHeuristic<VAR extends CspVariable, VAL>
     extends ValueOrderingStrategy<VAR, VAL> {
   const LeastConstrainingValueHeuristic();
 
   @override
   List<VAL> apply(
-      Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR variable) {
+      Csp<VAR, VAL> csp, CspAssignment<VAR, VAL> assignment, VAR variable) {
     print(" LeastConstrainingValueHeuristic apply --->");
     List<Pair<VAL, int>> pairs = [];
     for (VAL value in csp.getDomain(variable).values) {
@@ -27,12 +32,12 @@ class LeastConstrainingValueHeuristic<VAR extends Variable, VAL>
     return result;
   }
 
-  int countLostValues(Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment,
+  int countLostValues(Csp<VAR, VAL> csp, CspAssignment<VAR, VAL> assignment,
       VAR variable, VAL value) {
     int result = 0;
-    Assignment<VAR, VAL> assign = Assignment();
+    CspAssignment<VAR, VAL> assign = CspAssignment();
     assign.add(variable, value);
-    for (Constraint<VAR, VAL> constraint in csp.getConstraints(variable)) {
+    for (CspConstraint<VAR, VAL> constraint in csp.getConstraints(variable)) {
       if (constraint.getScope.length == 2) {
         VAR? neighbor = csp.getNeighbor(variable, constraint);
         if (neighbor != null) {

@@ -1,7 +1,10 @@
+///
+/// Clase base para escuchadores de cambios de estado en CSP
+///
 part of './csp.dart';
 
-class CspListener<VAR extends Variable, VAL> {
-  void stateChanged(Csp<VAR, VAL> csp, Assignment<VAR, VAL>? assignment,
+class CspListener<VAR extends CspVariable, VAL> {
+  void stateChanged(Csp<VAR, VAL> csp, CspAssignment<VAR, VAL>? assignment,
       VAR? variable, String info) {
     print("stateChanged --> ");
     print(info);

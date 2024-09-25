@@ -1,8 +1,11 @@
+///
+/// Clase para para la definición de la estrategia para comprobar
+/// la consistencia por utilizando el algoritma AC3
+///
 part of '../../csp.dart';
 
-class AC3Strategy<VAR extends Variable, VAL>
+class AC3Strategy<VAR extends CspVariable, VAL>
     extends AbstractInferenceStrategy<VAR, VAL> {
-      
   @override
   InferenceLog<VAR, VAL> initialApply(Csp<VAR, VAL> csp) {
     DoubleLinkedQueue<VAR> queue = DoubleLinkedQueue();
@@ -14,16 +17,16 @@ class AC3Strategy<VAR extends Variable, VAL>
 
   @override
   InferenceLog<VAR, VAL> apply(
-      Csp<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR variable) {
+      Csp<VAR, VAL> csp, CspAssignment<VAR, VAL> assignment, VAR variable) {
     DomainLog<VAR, VAL> log = DomainLog();
-    Domain<VAL> domain = csp.getDomain(variable);
+    CspDomain<VAL> domain = csp.getDomain(variable);
     VAL? value = assignment.getValue(variable);
     if (value != null) {
       if (domain.values.length > 1) {
         DoubleLinkedQueue<VAR> queue = DoubleLinkedQueue();
         queue.add(variable);
         log.storeDomainFor(variable, domain);
-        csp.setDomain(variable, Domain(values: [value]));
+        csp.setDomain(variable, CspDomain(values: [value]));
         reduceDomains(queue, csp, log);
       }
     }
@@ -34,7 +37,7 @@ class AC3Strategy<VAR extends Variable, VAL>
       DomainLog<VAR, VAL> log) {
     while (queue.isNotEmpty) {
       VAR variable = queue.removeFirst();
-      for (Constraint<VAR, VAL> constraint in csp.getConstraints(variable)) {
+      for (CspConstraint<VAR, VAL> constraint in csp.getConstraints(variable)) {
         VAR? neighbor = csp.getNeighbor(variable, constraint);
         if (neighbor != null &&
             revise(neighbor, variable, constraint, csp, log)) {
@@ -48,11 +51,11 @@ class AC3Strategy<VAR extends Variable, VAL>
     }
   }
 
-  bool revise(VAR xi, VAR xj, Constraint<VAR, VAL> constraint,
+  bool revise(VAR xi, VAR xj, CspConstraint<VAR, VAL> constraint,
       Csp<VAR, VAL> csp, DomainLog<VAR, VAL> log) {
-    Domain<VAL> currDomain = csp.getDomain(xi);
+    CspDomain<VAL> currDomain = csp.getDomain(xi);
     List<VAL> newValues = [];
-    Assignment<VAR, VAL> assignment = Assignment();
+    CspAssignment<VAR, VAL> assignment = CspAssignment();
     for (VAL vi in currDomain.values) {
       assignment.add(xi, vi);
       for (VAL vj in csp.getDomain(xj).values) {
@@ -65,7 +68,7 @@ class AC3Strategy<VAR extends Variable, VAL>
     }
     if (newValues.length < currDomain.values.length) {
       log.storeDomainFor(xi, csp.getDomain(xi));
-      csp.setDomain(xi, Domain<VAL>(values: newValues));
+      csp.setDomain(xi, CspDomain<VAL>(values: newValues));
       return true;
     }
     return false;

@@ -1,6 +1,10 @@
+///
+/// Clase base para para la definición de la heurística de ordenación de valores
+/// que elige la variable con la menor cantidad de valores “legales” restantes
+/// en su dominio.
 part of '../../csp.dart';
 
-class MinimumRemainingValuesHeuristic<VAR extends Variable, VAL>
+class MinimumRemainingValuesHeuristic<VAR extends CspVariable, VAL>
     extends VariableSelectionStrategy<VAR, VAL> {
   const MinimumRemainingValuesHeuristic();
 

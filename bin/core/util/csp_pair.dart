@@ -1,3 +1,6 @@
+///
+/// Clase para gestión de pares de valores
+///
 part of '../csp.dart';
 
 class Pair<X, Y> extends Equatable {

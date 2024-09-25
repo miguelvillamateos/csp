@@ -1,9 +1,12 @@
+///
+/// Clase base para el dominio de las variables
+///
 part of './csp.dart';
 
-class Domain<VAL> extends Equatable {
+class CspDomain<VAL> extends Equatable {
   final List<VAL> values;
 
-  Domain({this.values = const []});
+  CspDomain({this.values = const []});
 
   int get size => values.length;
 

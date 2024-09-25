@@ -3,16 +3,16 @@ import 'dart:math';
 
 import '../../csp.dart';
 
-class CspTreeSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
+class CspTreeSolver<VAR extends CspVariable, VAL> extends CspSolver<VAR, VAL> {
   @override
-  Assignment<VAR, VAL> solve(Csp<VAR, VAL> csp) {
-    Assignment<VAR, VAL> assignment = Assignment();
-    if (csp.variables.length > 0) {
+  CspAssignment<VAR, VAL> solve(Csp<VAR, VAL> csp) {
+    CspAssignment<VAR, VAL> assignment = CspAssignment();
+    if (csp.variables.isNotEmpty) {
       int index = Random().nextInt(csp.variables.length);
       VAR root = csp.variables[index];
 
       List<VAR> orderedVars = [];
-      LinkedHashMap<VAR, Constraint<VAR, VAL>> parentConstraints =
+      LinkedHashMap<VAR, CspConstraint<VAR, VAL>> parentConstraints =
           LinkedHashMap();
 
       topologicalSort(csp, root, orderedVars, parentConstraints);
@@ -20,7 +20,7 @@ class CspTreeSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
         for (int i = orderedVars.length - 1; i > 0; i--) {
           VAR variable = orderedVars[i];
           if (parentConstraints.containsKey(variable)) {
-            Constraint<VAR, VAL>? constraint = parentConstraints[variable];
+            CspConstraint<VAR, VAL>? constraint = parentConstraints[variable];
             if (constraint != null) {
               VAR? parent = csp.getNeighbor(variable, constraint);
               if (parent != null) {
@@ -50,15 +50,16 @@ class CspTreeSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
   }
 
   void topologicalSort(Csp<VAR, VAL> csp, VAR root, List<VAR> orderedVars,
-      Map<VAR, Constraint<VAR, VAL>> parentConstraints) {
+      Map<VAR, CspConstraint<VAR, VAL>> parentConstraints) {
     orderedVars.add(root);
-    parentConstraints.putIfAbsent(root, () => Constraint<VAR, VAL>());
+    parentConstraints.putIfAbsent(root, () => CspConstraint<VAR, VAL>());
     int currParentIdx = -1;
     while (currParentIdx < orderedVars.length - 1) {
       currParentIdx++;
       VAR currParent = orderedVars[currParentIdx];
       int arcsPointingUpwards = 0;
-      for (Constraint<VAR, VAL> constraint in csp.getConstraints(currParent)) {
+      for (CspConstraint<VAR, VAL> constraint
+          in csp.getConstraints(currParent)) {
         VAR? neighbor = csp.getNeighbor(currParent, constraint);
         if (neighbor == null) {
           throw FormatException("Constraint $constraint is not binary.");
@@ -80,10 +81,10 @@ class CspTreeSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
   }
 
   bool makeArcConsistent(
-      VAR xi, VAR xj, Constraint<VAR, VAL> constraint, Csp<VAR, VAL> csp) {
-    Domain<VAL> currDomain = csp.getDomain(xi);
+      VAR xi, VAR xj, CspConstraint<VAR, VAL> constraint, Csp<VAR, VAL> csp) {
+    CspDomain<VAL> currDomain = csp.getDomain(xi);
     List<VAL> newValues = [];
-    Assignment<VAR, VAL> assignment = Assignment();
+    CspAssignment<VAR, VAL> assignment = CspAssignment();
     for (VAL vi in currDomain.values) {
       assignment.add(xi, vi);
       for (VAL vj in csp.getDomain(xj).values) {
@@ -95,7 +96,7 @@ class CspTreeSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
       }
     }
     if (newValues.length < currDomain.size) {
-      csp.setDomain(xi, Domain(values: newValues));
+      csp.setDomain(xi, CspDomain(values: newValues));
       return true;
     }
     return false;

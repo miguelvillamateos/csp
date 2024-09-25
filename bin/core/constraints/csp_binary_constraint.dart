@@ -1,7 +1,10 @@
+///
+/// Clase para la definición de restricciones binarias
+///
 part of '../csp.dart';
 
-abstract class BinaryConstraint<VAR extends Variable, VAL>
-    extends Constraint<VAR, VAL> {
+abstract class BinaryConstraint<VAR extends CspVariable, VAL>
+    extends CspConstraint<VAR, VAL> {
   final VAR v1;
   final VAR v2;
 
