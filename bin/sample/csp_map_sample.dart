@@ -2,6 +2,7 @@
 /// Ejemplo de aplicación de resolución de CSP para el problema de coloreado de
 /// mapas
 ///
+library;
 import '../core/csp.dart';
 
 void showMapSample() {

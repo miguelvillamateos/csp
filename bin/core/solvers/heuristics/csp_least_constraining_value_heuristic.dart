@@ -21,7 +21,7 @@ class LeastConstrainingValueHeuristic<VAR extends CspVariable, VAL>
 
     pairs.sort((a, b) => a.getSecond().compareTo(b.getSecond()));
 
-    print(" Pares: ${pairs.toString()}");
+    print(" Pares [${pairs.length}]: ${pairs.toString()}");
 
     List<VAL> result = [];
     pairs.every((p) {

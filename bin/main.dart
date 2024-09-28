@@ -1,6 +1,7 @@
 ///
 /// Programa de ejemplo de uso de la libreria csp
 ///
+library;
 import 'package:args/args.dart';
 import 'sample/csp_map_sample.dart';
 import 'sample/csp_gantt_sample.dart';
