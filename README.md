@@ -20,15 +20,15 @@ flowchart LR
     NSW((NSW))
     V((V))
     T((T))
-    SA --- WA
-    SA --- NT
-    SA --- Q
-    SA --- NSW
-    SA --- V
-    WA --- NT
-    NT --- Q
-    Q --- NSW
-    NSW --- V
+    SA <--> WA
+    SA <--> NT
+    SA <--> Q
+    SA <--> NSW
+    SA <--> V
+    WA <--> NT
+    NT <--> Q
+    Q <--> NSW
+    NSW <--> V
     
 ```
 
