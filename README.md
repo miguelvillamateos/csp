@@ -32,7 +32,7 @@ flowchart LR
     
 ```
 
-Ejemplo 2 : ordenación de tareas en el tiempo
+Ejemplo 2 : ordenación de tareas en el tiempo y recursos
 - Se definen las Variables como las tareas que han de gestionarse
 - Se definen los Valores como estructuras que contienen un principio y un final (fecha y hora)
 - Se establece el dominio de cada variable con los Valores que son admitidos (rango de horas)
