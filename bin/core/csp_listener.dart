@@ -3,7 +3,7 @@
 ///
 part of './csp.dart';
 
-class CspListener<VAR extends CspVariable, VAL> {
+class CspListener<VAR extends CspVariable, VAL extends CspValue> {
   void stateChanged(Csp<VAR, VAL> csp, CspAssignment<VAR, VAL>? assignment,
       VAR? variable, String info) {
     print("stateChanged --> ");

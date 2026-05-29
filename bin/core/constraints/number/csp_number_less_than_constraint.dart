@@ -3,18 +3,14 @@
 ///
 part of '../../csp.dart';
 
-class NumberLessThanConstraint<VAR extends CspVariable, NUMBER extends num>
+class NumberLessThanConstraint<VAR extends CspVariable, NUMBER extends CspValue<num>>
     extends BinaryConstraint<VAR, NUMBER> {
   NumberLessThanConstraint(super.v1, super.v2);
 
   @override
   bool isSatisfiedWith(CspAssignment<VAR, NUMBER> assignment) {
-    NUMBER? value1 = assignment.getValue(v1);
-    NUMBER? value2 = assignment.getValue(v2);
-    bool r = false;
-    if (value1 != null && value2 != null) {
-      r = value1 < value2;
-    }
-    return r;
+    num? val1 = assignment.getValue(v1)?.model;
+    num? val2 = assignment.getValue(v2)?.model;
+    return val1 != null && val2 != null && val1 < val2;
   }
 }

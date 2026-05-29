@@ -3,7 +3,7 @@
 ///
 part of '../../csp.dart';
 
-class DomainLog<VAR extends CspVariable, VAL>
+class DomainLog<VAR extends CspVariable, VAL extends CspValue>
     implements InferenceLog<VAR, VAL> {
   List<Pair<VAR, CspDomain<VAL>>> savedDomains = [];
   List<VAR> affectedVariables = [];

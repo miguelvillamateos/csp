@@ -4,7 +4,7 @@
 /// en su dominio.
 part of '../../csp.dart';
 
-class MinimumRemainingValuesHeuristic<VAR extends CspVariable, VAL>
+class MinimumRemainingValuesHeuristic<VAR extends CspVariable, VAL  extends CspValue>
     extends VariableSelectionStrategy<VAR, VAL> {
   const MinimumRemainingValuesHeuristic();
 

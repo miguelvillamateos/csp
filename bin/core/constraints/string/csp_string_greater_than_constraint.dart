@@ -3,14 +3,14 @@
 ///
 part of '../../csp.dart';
 
-class StringGreaterThanConstraint<VAR extends CspVariable, String>
-    extends BinaryConstraint<VAR, String> {
+class StringGreaterThanConstraint<VAR extends CspVariable, STR extends CspValue<String>>
+    extends BinaryConstraint<VAR, STR> {
   StringGreaterThanConstraint(super.v1, super.v2);
 
   @override
-  bool isSatisfiedWith(CspAssignment<VAR, String> assignment) {
-    String? value1 = assignment.getValue(v1);
-    String? value2 = assignment.getValue(v2);
+  bool isSatisfiedWith(CspAssignment<VAR, STR> assignment) {
+    STR? value1 = assignment.getValue(v1);
+    STR? value2 = assignment.getValue(v2);
     bool r = false;
     if (value1 != null && value2 != null) {
       r = (value1.toString().compareTo(value2.toString()) > 0);

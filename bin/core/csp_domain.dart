@@ -3,16 +3,20 @@
 ///
 part of './csp.dart';
 
-class CspDomain<VAL> extends Equatable {
+class CspDomain<VAL extends CspValue> extends Equatable {
   final List<VAL> values;
 
-  CspDomain({this.values = const []});
+  const CspDomain({this.values = const []});
 
   int get size => values.length;
+
+  VAL operator [](int index) => values[index];
 
   VAL get(int index) => values[index];
 
   bool isEmpty() => values.isEmpty;
+
+  bool get isNotEmpty => values.isNotEmpty;
 
   bool contains(VAL value) => values.contains(value);
 

@@ -1,6 +1,6 @@
 part of '../../csp.dart';
 
-class FlexibleBacktrackingSolver<VAR extends CspVariable, VAL>
+class FlexibleBacktrackingSolver<VAR extends CspVariable, VAL extends CspValue>
     extends AbstractBacktrackingSolver<VAR, VAL> {
   final Heuristics<VAR, VAL> heuristics;
   final AbstractInferenceStrategy<VAR, VAL> inferenceStrategy;

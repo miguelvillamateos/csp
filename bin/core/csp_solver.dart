@@ -3,7 +3,7 @@
 ///
 part of './csp.dart';
 
-abstract class CspSolver<VAR extends CspVariable, VAL> {
+abstract class CspSolver<VAR extends CspVariable, VAL extends CspValue> {
   final List<CspListener<VAR, VAL>> listeners = [];
 
   CspSolver();

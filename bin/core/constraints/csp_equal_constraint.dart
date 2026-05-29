@@ -3,7 +3,7 @@
 ///
 part of '../csp.dart';
 
-class EqualConstraint<VAR extends CspVariable, VAL>
+class EqualConstraint<VAR extends CspVariable, VAL extends CspValue>
     extends BinaryConstraint<VAR, VAL> {
   EqualConstraint(super.v1, super.v2);
 

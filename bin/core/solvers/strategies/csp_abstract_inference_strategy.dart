@@ -4,7 +4,7 @@
 ///
 part of '../../csp.dart';
 
-abstract class AbstractInferenceStrategy<VAR extends CspVariable, VAL> {
+abstract class AbstractInferenceStrategy<VAR extends CspVariable, VAL  extends CspValue> {
   const AbstractInferenceStrategy();
   InferenceLog<VAR, VAL> initialApply(Csp<VAR, VAL> csp);
 

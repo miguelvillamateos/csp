@@ -3,7 +3,7 @@
 ///
 part of '../../csp.dart';
 
-class Heuristics<VAR extends CspVariable, VAL> {
+class Heuristics<VAR extends CspVariable, VAL extends CspValue> {
   final VariableSelectionStrategy<VAR, VAL> variableSelectionStrategy;
   final ValueOrderingStrategy<VAR, VAL> valueOrderingStrategy;
 

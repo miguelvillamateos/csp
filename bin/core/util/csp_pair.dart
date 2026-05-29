@@ -7,7 +7,7 @@ class Pair<X, Y> extends Equatable {
   final X a;
   final Y b;
 
-  Pair(this.a, this.b);
+  const Pair(this.a, this.b);
 
   X getFirst() => a;
   Y getSecond() => b;

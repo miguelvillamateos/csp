@@ -8,7 +8,7 @@ class CspTimeOfDay extends Equatable implements Comparable<CspTimeOfDay> {
   final int minute;
   final int seconds;
 
-  CspTimeOfDay(
+  const CspTimeOfDay(
       {required this.hour, required this.minute, required this.seconds});
 
   CspTimeOfDay.fromDateTime({required DateTime dateTime})
@@ -30,15 +30,8 @@ class CspTimeOfDay extends Equatable implements Comparable<CspTimeOfDay> {
 
   @override
   int compareTo(CspTimeOfDay other) {
-    int r = (hour < other.hour)
-        ? -1
-        : ((hour > other.hour)
-            ? 1
-            : ((minute < other.minute)
-                ? -1
-                : ((minute > other.minute) ? 1 : 0)));
-
-    return r;
+    if (hour != other.hour) return hour.compareTo(other.hour);
+    return minute.compareTo(other.minute);
   }
 
   @override

@@ -3,7 +3,7 @@
 ///
 part of '../csp.dart';
 
-abstract class GreaterThanConstraint<VAR extends CspVariable, VAL>
+abstract class GreaterThanConstraint<VAR extends CspVariable, VAL  extends CspValue>
     extends BinaryConstraint<VAR, VAL> {
   GreaterThanConstraint(super.v1, super.v2);
 }

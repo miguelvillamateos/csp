@@ -4,7 +4,7 @@
 ///
 part of '../../csp.dart';
 
-abstract class ValueOrderingStrategy<VAR extends CspVariable, VAL> {
+abstract class ValueOrderingStrategy<VAR extends CspVariable, VAL  extends CspValue> {
   const ValueOrderingStrategy();
 
   List<VAL> apply(

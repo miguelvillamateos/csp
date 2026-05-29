@@ -13,6 +13,7 @@ part 'csp_domain.dart';
 part 'csp_listener.dart';
 part 'csp_solver.dart';
 part 'csp_variable.dart';
+part 'csp_value.dart';
 part 'util/csp_pair.dart';
 part 'util/csp_time_of_day.dart';
 part 'constraints/csp_binary_constraint.dart';
@@ -36,15 +37,12 @@ part 'solvers/strategies/csp_variable_selection_strategy.dart';
 part 'solvers/search/csp_abstract_backtracking_solver.dart';
 part 'solvers/search/csp_flexible_backtracking_solver.dart';
 
-class Csp<VAR extends CspVariable, VAL> {
+class Csp<VAR extends CspVariable, VAL extends CspValue> {
   final List<VAR> variables = [];
   final List<CspDomain<VAL>> domains = [];
   final List<CspConstraint<VAR, VAL>> constraints = [];
-  final LinkedHashMap<VAR, CspDomain<VAL>> variableToDomainMap =
-      LinkedHashMap<VAR, CspDomain<VAL>>();
-  final LinkedHashMap<VAR, List<CspConstraint<VAR, VAL>>>
-      variableToConstrainsMap =
-      LinkedHashMap<VAR, List<CspConstraint<VAR, VAL>>>();
+  final Map<VAR, CspDomain<VAL>> variableToDomainMap = {};
+  final Map<VAR, List<CspConstraint<VAR, VAL>>> variableToConstrainsMap = {};
 
   Csp();
 
@@ -57,9 +55,7 @@ class Csp<VAR extends CspVariable, VAL> {
   }
 
   void addAllVariables(List<VAR> variables) {
-    for (VAR variable in variables) {
-      addVariable(variable);
-    }
+    variables.forEach(addVariable);
   }
 
   void addVariable(VAR variable) {
@@ -84,20 +80,14 @@ class Csp<VAR extends CspVariable, VAL> {
   }
 
   bool removeValueFromDomain(VAR variable, VAL value) {
-    CspDomain<VAL> currDomain = getDomain(variable);
-    bool r = false;
-    final List<VAL> values = [];
+    final currDomain = getDomain(variable);
+    final newValues = currDomain.values.where((val) => val != value).toList();
 
-    for (VAL val in currDomain.values) {
-      if (val != value) {
-        values.add(val);
-      }
-      if (values.length < currDomain.size) {
-        setDomain(variable, CspDomain<VAL>(values: values));
-        r = true;
-      }
+    if (newValues.length < currDomain.size) {
+      setDomain(variable, CspDomain<VAL>(values: newValues));
+      return true;
     }
-    return r;
+    return false;
   }
 
   void addConstraint(CspConstraint<VAR, VAL> constraint) {
@@ -127,12 +117,12 @@ class Csp<VAR extends CspVariable, VAL> {
   }
 
   VAR? getNeighbor(VAR v, CspConstraint<VAR, VAL> constraint) {
-    List<VAR> scope = constraint.getScope;
+    final scope = constraint.getScope;
     if (scope.length == 2) {
-      if (v == scope.elementAt(0)) {
-        return scope.elementAt(1);
-      } else if (v == scope.elementAt(1)) {
-        return scope.elementAt(0);
+      if (v == scope[0]) {
+        return scope[1];
+      } else if (v == scope[1]) {
+        return scope[0];
       }
     }
     return null;

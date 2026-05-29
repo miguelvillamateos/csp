@@ -1,6 +1,6 @@
 part of '../../csp.dart';
 
-abstract class AbstractBacktrackingSolver<VAR extends CspVariable, VAL>
+abstract class AbstractBacktrackingSolver<VAR extends CspVariable, VAL extends CspValue>
     extends CspSolver<VAR, VAL> {
   @override
   CspAssignment<VAR, VAL> solve(Csp<VAR, VAL> csp) {

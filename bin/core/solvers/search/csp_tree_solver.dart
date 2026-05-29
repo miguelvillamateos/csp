@@ -3,7 +3,7 @@ import 'dart:math';
 
 import '../../csp.dart';
 
-class CspTreeSolver<VAR extends CspVariable, VAL> extends CspSolver<VAR, VAL> {
+class CspTreeSolver<VAR extends CspVariable, VAL  extends CspValue> extends CspSolver<VAR, VAL> {
   @override
   CspAssignment<VAR, VAL> solve(Csp<VAR, VAL> csp) {
     CspAssignment<VAR, VAL> assignment = CspAssignment();

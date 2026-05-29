@@ -3,7 +3,7 @@
 ///
 part of '../csp.dart';
 
-class NotEqualConstraint<VAR extends CspVariable, VAL>
+class NotEqualConstraint<VAR extends CspVariable, VAL extends CspValue>
     extends BinaryConstraint<VAR, VAL> {
   NotEqualConstraint(super.v1, super.v2);
 

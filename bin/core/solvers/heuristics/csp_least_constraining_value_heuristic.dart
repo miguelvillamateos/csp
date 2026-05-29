@@ -5,7 +5,7 @@
 ///
 part of '../../csp.dart';
 
-class LeastConstrainingValueHeuristic<VAR extends CspVariable, VAL>
+class LeastConstrainingValueHeuristic<VAR extends CspVariable, VAL extends CspValue>
     extends ValueOrderingStrategy<VAR, VAL> {
   const LeastConstrainingValueHeuristic();
 

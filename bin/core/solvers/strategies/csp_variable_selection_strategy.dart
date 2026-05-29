@@ -4,7 +4,7 @@
 ///
 part of '../../csp.dart';
 
-abstract class VariableSelectionStrategy<VAR extends CspVariable, VAL> {
+abstract class VariableSelectionStrategy<VAR extends CspVariable, VAL extends CspValue> {
   const VariableSelectionStrategy();
 
   List<VAR> apply(Csp<VAR, VAL> csp, List<VAR> vars);

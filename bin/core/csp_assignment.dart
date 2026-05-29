@@ -4,8 +4,9 @@
 ///
 part of './csp.dart';
 
-class CspAssignment<VAR extends CspVariable, VAL> extends Equatable {
-  final LinkedHashMap<VAR, VAL> variableToValueMap = LinkedHashMap();
+class CspAssignment<VAR extends CspVariable, VAL extends CspValue>
+    extends Equatable {
+  final Map<VAR, VAL> variableToValueMap = {};
 
   CspAssignment();
 
@@ -23,9 +24,8 @@ class CspAssignment<VAR extends CspVariable, VAL> extends Equatable {
   }
 
   // Añadir (variable,valor) a la asignación
-  VAL add(VAR variable, VAL value) {
-    remove(variable);
-    return variableToValueMap.putIfAbsent(variable, () => value);
+  void add(VAR variable, VAL value) {
+    variableToValueMap[variable] = value;
   }
 
   // Eliminar la variable de la asignación
@@ -46,7 +46,7 @@ class CspAssignment<VAR extends CspVariable, VAL> extends Equatable {
   // Comprobar si es completa respecto a las variables facilitadas.
   // Será completa si todas las variables están contenidas en la asignación.
   bool isComplete(List<VAR> variables) {
-    return variables.every((variable) => this.contains(variable));
+    return variables.every((variable) => contains(variable));
   }
 
   // Comprobar si la asignación realizada es una solución del problema CSP

@@ -1,11 +1,11 @@
-/// Clase base para las variables
+/// Clase base para los posibles valores
 
 part of './csp.dart';
 
-class CspVariable<T> extends Equatable {
+class CspValue<T> extends Equatable {
   final T model;
 
-  const CspVariable({required this.model});
+  const CspValue({required this.model});
 
   @override
   String toString() {

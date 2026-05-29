@@ -3,6 +3,7 @@
 /// mapas
 ///
 library;
+
 import '../core/csp.dart';
 
 void showMapSample() {
@@ -11,24 +12,26 @@ void showMapSample() {
   print("--------------------------------------------------------");
 
   // Definición de las variables
-  final CspVariable NSW = CspVariable(name: "NSW");
-  final CspVariable NT = CspVariable(name: "NT");
-  final CspVariable Q = CspVariable(name: "Q");
-  final CspVariable SA = CspVariable(name: "SA");
-  final CspVariable T = CspVariable(name: "T");
-  final CspVariable V = CspVariable(name: "V");
-  final CspVariable WA = CspVariable(name: "WA");
+  final CspVariable NSW = CspVariable<String>(model: "NSW");
+  final CspVariable NT = CspVariable<String>(model: "NT");
+  final CspVariable Q = CspVariable<String>(model: "Q");
+  final CspVariable SA = CspVariable<String>(model: "SA");
+  final CspVariable T = CspVariable<String>(model: "T");
+  final CspVariable V = CspVariable<String>(model: "V");
+  final CspVariable WA = CspVariable<String>(model: "WA");
 
   // Definición de posibles valores
-  final String RED = "RED";
-  final String GREEN = "GREEN";
-  final String BLUE = "BLUE";
-  final String YELLOW = "YELLOW";
+  final CspValue<String> RED = CspValue<String>(model: "RED");
+  final CspValue<String> GREEN = CspValue<String>(model: "GREEN");
+  final CspValue<String> BLUE = CspValue<String>(model: "BLUE");
+  // final String YELLOW = "YELLOW";
 
   // Se define el dominio común: valores que pueden asignarse a las variables
-  CspDomain<String> domain = CspDomain<String>(values: [RED, GREEN, BLUE]);
+  CspDomain<CspValue<String>> domain =
+      CspDomain<CspValue<String>>(values: [RED, GREEN, BLUE]);
 
-  final Csp<CspVariable, String> csp = Csp<CspVariable, String>();
+  final Csp<CspVariable, CspValue<String>> csp =
+      Csp<CspVariable, CspValue<String>>();
   csp.addAllVariables([SA, NT, V, T, NSW, Q, WA]);
 
   // se relacionan los dominioas a las variables
@@ -37,38 +40,39 @@ void showMapSample() {
   }
 
   // Defeinición de las restricciones a aplicar a las variables/valores
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(WA, NT));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(WA, SA));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(NT, SA));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(NT, Q));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(SA, Q));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(SA, NSW));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(SA, V));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(Q, NSW));
-  csp.addConstraint(NotEqualConstraint<CspVariable, String>(NSW, V));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(WA, NT));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(WA, SA));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(NT, SA));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(NT, Q));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(SA, Q));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(SA, NSW));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(SA, V));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(Q, NSW));
+  csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(NSW, V));
 
   // Se establecen como condiciones adicionales un color para  dos zonas
-  csp.setDomain(SA, CspDomain<String>(values: [RED]));
-  csp.setDomain(T, CspDomain<String>(values: [GREEN]));
+  csp.setDomain(SA, CspDomain<CspValue<String>>(values: [RED]));
+  csp.setDomain(T, CspDomain<CspValue<String>>(values: [GREEN]));
 
-  AC3Strategy<CspVariable, String> ac3strategy =
-      AC3Strategy<CspVariable, String>();
-  MinimumRemainingValuesHeuristic<CspVariable, String>
+  AC3Strategy<CspVariable, CspValue<String>> ac3strategy =
+      AC3Strategy<CspVariable, CspValue<String>>();
+  MinimumRemainingValuesHeuristic<CspVariable, CspValue<String>>
       minimumRemainingValuesHeuristic =
-      MinimumRemainingValuesHeuristic<CspVariable, String>();
-  LeastConstrainingValueHeuristic<CspVariable, String>
+      MinimumRemainingValuesHeuristic<CspVariable, CspValue<String>>();
+  LeastConstrainingValueHeuristic<CspVariable, CspValue<String>>
       leastConstrainingValueHeuristic =
-      LeastConstrainingValueHeuristic<CspVariable, String>();
-  Heuristics<CspVariable, String> heuristics = Heuristics<CspVariable, String>(
-      variableSelectionStrategy: minimumRemainingValuesHeuristic,
-      valueOrderingStrategy: leastConstrainingValueHeuristic);
+      LeastConstrainingValueHeuristic<CspVariable, CspValue<String>>();
+  Heuristics<CspVariable, CspValue<String>> heuristics =
+      Heuristics<CspVariable, CspValue<String>>(
+          variableSelectionStrategy: minimumRemainingValuesHeuristic,
+          valueOrderingStrategy: leastConstrainingValueHeuristic);
 
-  FlexibleBacktrackingSolver<CspVariable, String> solver =
+  FlexibleBacktrackingSolver<CspVariable, CspValue<String>> solver =
       FlexibleBacktrackingSolver(
           heuristics: heuristics, inferenceStrategy: ac3strategy);
 
-  CspListener<CspVariable, String> listener =
-      CspListener<CspVariable, String>();
+  CspListener<CspVariable, CspValue<String>> listener =
+      CspListener<CspVariable, CspValue<String>>();
 
   solver.addCspListener(listener);
 

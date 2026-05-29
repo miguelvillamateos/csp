@@ -4,7 +4,7 @@
 ///
 part of '../../csp.dart';
 
-class AC3Strategy<VAR extends CspVariable, VAL>
+class AC3Strategy<VAR extends CspVariable, VAL  extends CspValue>
     extends AbstractInferenceStrategy<VAR, VAL> {
   @override
   InferenceLog<VAR, VAL> initialApply(Csp<VAR, VAL> csp) {

@@ -3,17 +3,17 @@ import 'package:equatable/equatable.dart';
 import '../core/csp.dart';
 
 // Definición de Variable
-class TaskVariable extends CspVariable {
-  TaskVariable({required super.name});
+class TaskVariable extends CspVariable<String> {
+  TaskVariable({required super.model});
 }
 
 // Definición de valores
-class TaskValue extends Equatable {
+class Task extends Equatable {
   final DateTime start;
   final DateTime end;
   final Resource resource;
 
-  TaskValue({required this.start, required this.end, required this.resource});
+  Task({required this.start, required this.end, required this.resource});
 
   @override
   String toString() {
@@ -22,6 +22,13 @@ class TaskValue extends Equatable {
 
   @override
   List<Object?> get props => [start, end];
+}
+
+class TaskValue extends CspValue<Task> {
+  TaskValue({required super.model});
+  DateTime get start => model.start;
+  DateTime get end => model.end;
+  Resource get resource => model.resource;
 }
 
 class Resource extends Equatable {
@@ -129,7 +136,7 @@ void showGanttSample() {
   List<TaskVariable> tasks = [];
 
   for (int i = 0; i < 10; i++) {
-    tasks.add(TaskVariable(name: "Task $i"));
+    tasks.add(TaskVariable(model: "Task $i"));
   }
 
   List<Resource> resources = [];
@@ -152,7 +159,7 @@ void showGanttSample() {
       // limitar horario
       if (tod.hour > minWorkingHour && tod.hour < maxWorkingHour) {
         TaskValue t =
-            TaskValue(start: d, end: d.add(Duration(hours: 1)), resource: r);
+            TaskValue(model:Task(start: d, end: d.add(Duration(hours: 1)), resource: r));
         domainValues.add(t);
       }
       d = d.add(Duration(hours: 1));
