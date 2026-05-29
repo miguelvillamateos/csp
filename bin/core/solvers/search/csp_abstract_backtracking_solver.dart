@@ -19,32 +19,39 @@ abstract class AbstractBacktrackingSolver<VAR extends CspVariable, VAL extends C
 
   CspAssignment<VAR, VAL> backtrack(
       Csp<VAR, VAL> csp, CspAssignment<VAR, VAL> assignment) {
-    CspAssignment<VAR, VAL> result = CspAssignment<VAR, VAL>();
-
     if (assignment.isComplete(csp.variables)) {
-      result = assignment;
-    } else {
-      VAR variable = selectUnassignedVariable(csp, assignment);
-      for (VAL value in orderDomainValues(csp, assignment, variable)) {
-        assignment.add(variable, value);
-        fireStateChanged(csp, assignment, variable, "Added ($variable,$value)");
-        if (assignment.isConsistent(csp.getConstraints(variable))) {
-          InferenceLog<VAR, VAL> log = inference(csp, assignment, variable);
-          if (!log.isEmpty()) {
-            fireStateChanged(csp, null, null, "Inference");
-          }
-          if (!log.inconsistencyFound()) {
-            fireStateChanged(csp, null, null, "NO inconsistencyFound ");
-            result = backtrack(csp, assignment);
-            if (!result.isEmpty()) {
-              break;
-            }
-          }
-          log.undo(csp);
-        }
-        assignment.remove(variable);
-      }
+      return assignment;
     }
-    return result;
+
+    VAR variable = selectUnassignedVariable(csp, assignment);
+    CspAssignment<VAR, VAL> bestResult = CspAssignment<VAR, VAL>();
+
+    for (VAL value in orderDomainValues(csp, assignment, variable)) {
+      assignment.add(variable, value);
+      fireStateChanged(csp, assignment, variable, "Added ($variable,$value)");
+
+      if (assignment.isConsistent(csp.getConstraints(variable))) {
+        InferenceLog<VAR, VAL> log = inference(csp, assignment, variable);
+        if (!log.inconsistencyFound()) {
+          CspAssignment<VAR, VAL> result = backtrack(csp, assignment);
+          if (result.isComplete(csp.variables)) {
+            return result;
+          }
+          // Guardamos la mejor solución parcial encontrada
+          if (result.getVariables().length > bestResult.getVariables().length) {
+            bestResult = CspAssignment.copyFrom(result);
+          }
+        }
+        log.undo(csp);
+      }
+      assignment.remove(variable);
+    }
+
+    // Si no encontramos una completa, devolvemos la mejor parcial o la actual
+    if (bestResult.isEmpty() && !assignment.isEmpty()) {
+      return CspAssignment.copyFrom(assignment);
+    }
+
+    return bestResult;
   }
 }

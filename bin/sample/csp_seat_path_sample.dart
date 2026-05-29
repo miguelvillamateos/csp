@@ -1,5 +1,7 @@
 library;
 
+import 'dart:io';
+import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 import '../core/csp.dart';
@@ -197,103 +199,223 @@ class CspSeatPathIsInSameGroupConstraint extends CspSeatPathConstraint {
   String toString() => "${v1.model.name} isInSameGroup ${v2.model.name}";
 }
 
-void showSeatPathSample({bool showLog = false}) {
+void showSeatPathSample({bool showLog = false, String? jsonPath}) {
   print("--------------------------------------------------------");
   print("Ejemplo de resolución del problema de asignación de asientos");
   print("--------------------------------------------------------");
 
-  // Definición de las personas (Variables)
-  final p1 = PersonModel(id: 1, name: "Alice");
-  final p2 = PersonModel(id: 2, name: "Bob");
-  final p3 = PersonModel(id: 3, name: "Charlie");
+  if (jsonPath == null || jsonPath.isEmpty) {
+    print("Error: No se ha proporcionado un fichero JSON de configuración.");
+    print("Uso: dart bin/main.dart -e 3 -f ruta/al/fichero.json");
+    return;
+  }
 
-  final v1 = CspSeatPathVariable(model: p1);
-  final v2 = CspSeatPathVariable(model: p2);
-  final v3 = CspSeatPathVariable(model: p3);
+  final File file = File(jsonPath);
+  if (!file.existsSync()) {
+    print("Error: El fichero JSON no existe: $jsonPath");
+    return;
+  }
 
-  // Definición de grupos de asientos
-  final g1 = SeatGroup(id: 1, name: "Zona VIP");
-  final g2 = SeatGroup(id: 2, name: "Zona Estándar");
-  final allGroups = [g1, g2];
+  Map<String, dynamic> data;
+  try {
+    final String content = file.readAsStringSync();
+    data = jsonDecode(content);
+  } catch (e) {
+    print("Error al leer o procesar el fichero JSON: $e");
+    return;
+  }
 
-  // Definición de los asientos (Valores)
-  final s1 = SeatModel(id: 1, name: "A1", groupIds: [1], nextToIds: [2]);
-  final s2 = SeatModel(id: 2, name: "A2", groupIds: [1], nextToIds: [1]);
-  final s3 = SeatModel(id: 3, name: "B1", groupIds: [2], nextToIds: []);
+  // 1. Personas (Variables)
+  List<CspSeatPathVariable> variables = [];
+  Set<int> personIds = {};
+  if (data['people'] is List) {
+    for (var p in data['people']) {
+      final int? id = p['id'];
+      final String? name = p['name'];
+      if (id != null && name != null) {
+        if (personIds.contains(id)) {
+          print("Error de coherencia: ID de persona duplicado ($id).");
+          return;
+        }
+        personIds.add(id);
+        variables.add(CspSeatPathVariable(model: PersonModel(id: id, name: name)));
+      }
+    }
+  }
 
-  final val1 = CspSeatPathValue(model: s1);
-  final val2 = CspSeatPathValue(model: s2);
-  final val3 = CspSeatPathValue(model: s3);
+  // 2. Grupos
+  List<SeatGroup> allGroups = [];
+  Set<int> groupIds = {};
+  if (data['groups'] is List) {
+    for (var g in data['groups']) {
+      final int? id = g['id'];
+      final String? name = g['name'];
+      if (id != null && name != null) {
+        if (groupIds.contains(id)) {
+          print("Error de coherencia: ID de grupo duplicado ($id).");
+          return;
+        }
+        groupIds.add(id);
+        allGroups.add(SeatGroup(id: id, name: name));
+      }
+    }
+  }
 
-  final domain = CspSeatPathDomain(values: [val1, val2, val3]);
+  // 3. Asientos (Valores)
+  List<SeatModel> seatModels = [];
+  Set<int> seatIds = {};
+  if (data['seats'] is List) {
+    for (var s in data['seats']) {
+      final int? id = s['id'];
+      final String? name = s['name'];
+      if (id != null && name != null) {
+        if (seatIds.contains(id)) {
+          print("Error de coherencia: ID de asiento duplicado ($id).");
+          return;
+        }
+        seatIds.add(id);
+        
+        final List<int> gIds = (s['groupIds'] as List?)?.cast<int>() ?? [];
+        for (var gid in gIds) {
+          if (!groupIds.contains(gid)) {
+            print("Error de coherencia: El asiento $name referencia un grupo inexistente ($gid).");
+            return;
+          }
+        }
+
+        final List<int> nIds = (s['nextToIds'] as List?)?.cast<int>() ?? [];
+        seatModels.add(SeatModel(id: id, name: name, groupIds: gIds, nextToIds: List.from(nIds)));
+      }
+    }
+  }
+
+  // Validar vecinos y asegurar reciprocidad
+  for (var seat in seatModels) {
+    for (var neighborId in seat.nextToIds) {
+      if (!seatIds.contains(neighborId)) {
+        print("Error de coherencia: El asiento ${seat.name} referencia un vecino inexistente (ID: $neighborId).");
+        return;
+      }
+      final neighbor = seatModels.firstWhere((s) => s.id == neighborId);
+      if (!neighbor.nextToIds.contains(seat.id)) {
+        neighbor.nextToIds.add(seat.id);
+      }
+    }
+  }
+
+  if (variables.isEmpty || seatModels.isEmpty) {
+    print("Error: No hay suficientes datos para ejecutar el problema (faltan personas o asientos).");
+    return;
+  }
+
+  final domain = CspSeatPathDomain(
+      values: seatModels.map((m) => CspSeatPathValue(model: m)).toList());
+
+  if (domain.size < variables.length) {
+    print("ADVERTENCIA: No hay suficientes asientos (${domain.size}) para todas las personas (${variables.length}).");
+    print("Faltan ${variables.length - domain.size} asientos.\n");
+  }
 
   final csp = Csp<CspSeatPathVariable, CspSeatPathValue>();
-  csp.addAllVariables([v1, v2, v3]);
-  csp.setDomain(v1, domain);
-  csp.setDomain(v2, domain);
-  csp.setDomain(v3, domain);
-
-  // Listados previos
-  print("Listado de personas:");
-  for (var v in csp.variables) {
-    print(" - ${v.model.name} (ID: ${v.model.id})");
+  csp.addAllVariables(variables);
+  for (var v in variables) {
+    csp.setDomain(v, domain);
   }
+
+  // 4. Restricciones
+  if (data['constraints'] is List) {
+    CspSeatPathVariable? findPerson(int id) => variables.cast<CspSeatPathVariable?>().firstWhere((v) => v!.model.id == id, orElse: () => null);
+    SeatModel? findSeat(int id) => seatModels.cast<SeatModel?>().firstWhere((s) => s!.id == id, orElse: () => null);
+
+    for (var item in data['constraints']) {
+      final type = item['type'];
+      switch (type) {
+        case 'isNextTo':
+          final v1 = findPerson(item['v1']);
+          final v2 = findPerson(item['v2']);
+          if (v1 != null && v2 != null) csp.addConstraint(CspSeatPathIsNextToConstraint(v1, v2));
+          break;
+        case 'isNotNextTo':
+          final v1 = findPerson(item['v1']);
+          final v2 = findPerson(item['v2']);
+          if (v1 != null && v2 != null) csp.addConstraint(CspSeatPathIsNotNextToConstraint(v1, v2));
+          break;
+        case 'isAssignedTo':
+          final p = findPerson(item['person']);
+          final s = findSeat(item['seat']);
+          if (p != null && s != null) csp.addConstraint(CspSeatPathIsAssignedToConstraint(p, s));
+          break;
+        case 'isNotAssignedTo':
+          final p = findPerson(item['person']);
+          final s = findSeat(item['seat']);
+          if (p != null && s != null) csp.addConstraint(CspSeatPathIsNotAssignedToConstraint(p, s));
+          break;
+        case 'isInGroup':
+          final p = findPerson(item['person']);
+          final int? gId = item['groupId'];
+          if (p != null && gId != null) csp.addConstraint(CspSeatPathIsInGroupConstraint(p, gId));
+          break;
+        case 'isNotInGroup':
+          final p = findPerson(item['person']);
+          final int? gId = item['groupId'];
+          if (p != null && gId != null) csp.addConstraint(CspSeatPathIsNotInGroupConstraint(p, gId));
+          break;
+        case 'isInSameGroup':
+          final v1 = findPerson(item['v1']);
+          final v2 = findPerson(item['v2']);
+          if (v1 != null && v2 != null) csp.addConstraint(CspSeatPathIsInSameGroupConstraint(v1, v2));
+          break;
+      }
+    }
+  }
+
+  csp.addConstraint(AllDifferentConstraint<CspSeatPathVariable, CspSeatPathValue>(variables));
+
+  // Listados y Ejecución
+  print("Listado de personas:");
+  for (var v in csp.variables) print(" - ${v.model.name} (ID: ${v.model.id})");
 
   print("\nListado de asientos:");
-  for (var val in domain.values) {
-    print(" - ${val.model.name} (ID: ${val.model.id}, Grupos: ${val.model.groupIds}, Vecinos: ${val.model.nextToIds})");
-  }
+  for (var val in domain.values) print(" - ${val.model.name} (ID: ${val.model.id}, Grupos: ${val.model.groupIds}, Vecinos: ${val.model.nextToIds})");
 
   print("\nListado de grupos:");
   for (var g in allGroups) {
-    final seatsInGroup = domain.values
-        .where((val) => val.model.isInGroup(g.id))
-        .map((val) => val.model.name)
-        .join(", ");
+    final seatsInGroup = domain.values.where((val) => val.model.isInGroup(g.id)).map((val) => val.model.name).join(", ");
     print(" - ${g.name} (ID: ${g.id}): [$seatsInGroup]");
   }
 
-  // Restricciones
-  csp.addConstraint(CspSeatPathIsNextToConstraint(v1, v2));
-  csp.addConstraint(CspSeatPathIsNotInGroupConstraint(v3, 1));
-  
-  // Asignación única de asiento (Cada persona en un asiento distinto)
-  csp.addConstraint(NotEqualConstraint<CspSeatPathVariable, CspSeatPathValue>(v1, v2));
-  csp.addConstraint(NotEqualConstraint<CspSeatPathVariable, CspSeatPathValue>(v1, v3));
-  csp.addConstraint(NotEqualConstraint<CspSeatPathVariable, CspSeatPathValue>(v2, v3));
-
   print("\nListado de restricciones:");
-  for (var c in csp.constraints) {
-    print(" - $c");
-  }
+  for (var c in csp.constraints) print(" - $c");
   print("");
 
-  // Configuración del solver
-  final ac3strategy = AC3Strategy<CspSeatPathVariable, CspSeatPathValue>();
-  final mrvHeuristic = MinimumRemainingValuesHeuristic<CspSeatPathVariable, CspSeatPathValue>();
-  final lcvHeuristic = LeastConstrainingValueHeuristic<CspSeatPathVariable, CspSeatPathValue>();
-  final heuristics = Heuristics<CspSeatPathVariable, CspSeatPathValue>(
-      variableSelectionStrategy: mrvHeuristic,
-      valueOrderingStrategy: lcvHeuristic);
-
   final solver = FlexibleBacktrackingSolver<CspSeatPathVariable, CspSeatPathValue>(
-          heuristics: heuristics, inferenceStrategy: ac3strategy);
+    heuristics: Heuristics(
+      variableSelectionStrategy: MinimumRemainingValuesHeuristic(),
+      valueOrderingStrategy: LeastConstrainingValueHeuristic()
+    ),
+    inferenceStrategy: AC3Strategy()
+  );
 
-  if (showLog) {
-    solver.addCspListener(CspListener<CspSeatPathVariable, CspSeatPathValue>());
-  }
+  if (showLog) solver.addCspListener(CspListener<CspSeatPathVariable, CspSeatPathValue>());
 
   final solution = solver.solve(csp);
 
-  if (solution.isSolution(csp)) {
-    print("Solución encontrada:");
-    for (final variable in solution.getVariables()) {
+  if (solution.isEmpty()) {
+    print("No se encontró ninguna solución válida.");
+  } else {
+    if (solution.isComplete(csp.variables)) {
+      print("Solución completa encontrada:");
+    } else {
+      print("Solución parcial encontrada (satisfaciendo el máximo de restricciones posibles):");
+    }
+
+    for (final variable in csp.variables) {
       final value = solution.getValue(variable);
       if (value != null) {
         print("${variable.model.name} asignado a ${value.model.name}");
+      } else {
+        print("${variable.model.name} se ha quedado SIN ASIENTO");
       }
     }
-  } else {
-    print("No se encontró una solución completa.");
   }
 }

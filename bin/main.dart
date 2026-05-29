@@ -33,6 +33,11 @@ ArgParser buildParser() {
       abbr: 'v',
       negatable: false,
       help: 'Show search log.',
+    )
+    ..addOption(
+      'file',
+      abbr: 'f',
+      help: 'Path to JSON configuration file for Example 3.',
     );
 }
 
@@ -41,7 +46,7 @@ void printUsage(ArgParser argParser) {
   print(argParser.usage);
 }
 
-void showSample(String id, {bool verbose = false}) {
+void showSample(String id, {bool verbose = false, String? jsonPath}) {
   switch (id) {
     case '1':
       showMapSample(showLog: verbose);
@@ -50,7 +55,7 @@ void showSample(String id, {bool verbose = false}) {
       showGanttSample(showLog: verbose);
       break;
     case '3':
-      showSeatPathSample(showLog: verbose);
+      showSeatPathSample(showLog: verbose, jsonPath: jsonPath);
       break;
     default:
       print("Invalid example number");
@@ -74,7 +79,9 @@ void main(List<String> arguments) {
     }
     if (results.wasParsed('example')) {
       if (results.rest.isNotEmpty) {
-        showSample(results.rest[0], verbose: results.wasParsed('verbose'));
+        showSample(results.rest[0],
+            verbose: results.wasParsed('verbose'),
+            jsonPath: results['file'] as String?);
         return;
       } else {
         print('Missing example id');

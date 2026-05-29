@@ -18,6 +18,7 @@ part 'util/csp_pair.dart';
 part 'util/csp_time_of_day.dart';
 part 'constraints/csp_binary_constraint.dart';
 part 'constraints/csp_not_equal_constraint.dart';
+part 'constraints/csp_all_different_constraint.dart';
 part 'constraints/csp_equal_constraint.dart';
 part 'constraints/csp_less_than_constraint.dart';
 part 'constraints/csp_greater_than_constraint.dart';
