@@ -1,12 +1,21 @@
-Estructura para la resolución de Problemas de satisfacción de restricciones (CSP)
+# Estructura para la resolución de Problemas de satisfacción de restricciones (CSP)
 
-Ejemplo 1 : coloreado de mapas
+Librería robusta y optimizada en Dart para modelar y resolver problemas CSP.
 
-- Se definen las Variables  con los nombres de cada region que quiere colorearse
+## Características principales
 
-- Se definen los Valores como los colores que pueden asignarse a cada región
+- **Abstracción Genérica**: Soporte para variables (`CspVariable<T>`) y valores (`CspValue<T>`) de cualquier tipo.
+- **Restricciones Predefinidas**: Incluye restricciones binarias como `NotEqualConstraint`, `EqualConstraint`, y restricciones numéricas/strings (`NumberLessThanConstraint`, `StringGreaterThanConstraint`, etc.).
+- **Núcleo Optimizado**:
+  - Uso de constructores `const` para eficiencia de memoria.
+  - Gestión de dominios mediante programación funcional.
+  - Tipado fuerte y seguridad contra nulos (Null Safety).
 
-- Se definen las restricciones para que cada region que tiene frontera con otra no se pinten del mismo color. Se puede definir la restricción de que una región tenga que ser de un color específico (dominio de valores de un solo elemento) 
+## Ejemplo 1: Coloreado de Mapas
+
+- **Variables**: Regiones geográficas.
+- **Valores**: Colores disponibles.
+- **Restricciones**: Las regiones con frontera común no pueden tener el mismo color (`NotEqualConstraint`).
 
 ```mermaid
 ---
@@ -29,12 +38,38 @@ flowchart LR
     NT <--> Q
     Q <--> NSW
     NSW <--> V
-    
 ```
 
-Ejemplo 2 : ordenación de tareas en el tiempo y recursos.
-- Se definen las Variables como las tareas que han de gestionarse
-- Se definen los Valores como estructuras que contienen un principio y un final (fecha y hora)
-- Se establece el dominio de cada variable con los Valores que son admitidos (rango de horas)
-- Se definen las restricciones de forma que cada tarea comence despues de que haya terminado la anterior y que ninguna tarea coincida en el tiempo con otra.
-  
+## Ejemplo 2: Ordenación de tareas en el tiempo y recursos
+
+- **Variables**: Tareas a gestionar.
+- **Valores**: Estructuras con inicio y fin (fecha/hora) y recursos asignados.
+- **Dominios**: Rango de horas y recursos permitidos para cada tarea.
+- **Restricciones**:
+  - Precedencia: Una tarea comienza después de que termine la anterior.
+  - Solapamiento: Ninguna tarea puede coincidir en tiempo y recurso con otra.
+
+## Uso Básico
+
+```dart
+// Definición de variables
+var wa = CspVariable(model: "WA");
+var nt = CspVariable(model: "NT");
+
+// Definición de dominio
+var colors = CspDomain(values: [
+  CspValue(model: "Red"),
+  CspValue(model: "Green"),
+  CspValue(model: "Blue")
+]);
+
+// Creación del problema
+var csp = Csp<CspVariable, CspValue>();
+csp.addVariable(wa);
+csp.addVariable(nt);
+csp.setDomain(wa, colors);
+csp.setDomain(nt, colors);
+
+// Añadir restricciones
+csp.addConstraint(NotEqualConstraint(wa, nt));
+```
