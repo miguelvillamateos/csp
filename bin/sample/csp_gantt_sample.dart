@@ -61,6 +61,9 @@ class StartBeforeStartConstraint<VAR extends TaskVariable,
     }
     return result;
   }
+
+  @override
+  String toString() => "$v1 startBeforeStart $v2";
 }
 
 class StartBeforeEndConstraint<VAR extends TaskVariable, VAL extends TaskValue>
@@ -77,6 +80,9 @@ class StartBeforeEndConstraint<VAR extends TaskVariable, VAL extends TaskValue>
     }
     return result;
   }
+
+  @override
+  String toString() => "$v1 startBeforeEnd $v2";
 }
 
 class StartAfterStartConstraint<VAR extends TaskVariable, VAL extends TaskValue>
@@ -95,6 +101,9 @@ class StartAfterStartConstraint<VAR extends TaskVariable, VAL extends TaskValue>
     }
     return result;
   }
+
+  @override
+  String toString() => "$v1 startAfterStart $v2";
 }
 
 class StartAfterEndConstraint<VAR extends TaskVariable, VAL extends TaskValue>
@@ -113,6 +122,9 @@ class StartAfterEndConstraint<VAR extends TaskVariable, VAL extends TaskValue>
     }
     return result;
   }
+
+  @override
+  String toString() => "$v1 startAfterEnd $v2";
 }
 
 class StartAfterEndAndNotEqualResourceConstraint<VAR extends TaskVariable,
@@ -126,9 +138,12 @@ class StartAfterEndAndNotEqualResourceConstraint<VAR extends TaskVariable,
     VAL? value2 = assignment.getValue(v2);
     return result && value1?.resource != value2?.resource;
   }
+
+  @override
+  String toString() => "$v1 startAfterEndAndNotEqualResource $v2";
 }
 
-void showGanttSample() {
+void showGanttSample({bool showLog = false}) {
   print("----------------------------------------");
   print("Ejemplo de confección diagrama de Gantt");
   print("----------------------------------------");
@@ -176,6 +191,19 @@ void showGanttSample() {
     csp.setDomain(variable, domain);
   }
 
+  print("Listado de tareas (Variables):");
+  for (var v in csp.variables) {
+    print(" - ${v.model}");
+  }
+
+  print("\nListado de posibles horarios (Valores):");
+  print(" Total valores en dominio: ${domain.size}");
+  // Solo mostramos los primeros 5 para no saturar la consola
+  for (var val in domain.values.take(5)) {
+    print(" - $val");
+  }
+  print(" ...");
+
   for (int j = 0; j < csp.variables.length - 1; j++) {
     TaskVariable v1 = csp.variables[j];
     TaskVariable v2 = csp.variables[j + 1];
@@ -191,6 +219,12 @@ void showGanttSample() {
       }
     }
   }
+
+  print("\nListado de restricciones:");
+  for (var c in csp.constraints) {
+    print(" - $c");
+  }
+  print("");
 
   AC3Strategy<TaskVariable, TaskValue> ac3strategy =
       AC3Strategy<TaskVariable, TaskValue>();
@@ -209,16 +243,22 @@ void showGanttSample() {
       FlexibleBacktrackingSolver(
           heuristics: heuristics, inferenceStrategy: ac3strategy);
 
-  CspListener<TaskVariable, TaskValue> listener =
-      CspListener<TaskVariable, TaskValue>();
+  if (showLog) {
+    CspListener<TaskVariable, TaskValue> listener =
+        CspListener<TaskVariable, TaskValue>();
+    solver.addCspListener(listener);
+  }
 
-  solver.addCspListener(listener);
-
-  print("CSP: ${csp.toString()}");
   CspAssignment solution = solver.solve(csp);
   if (solution.isSolution(csp)) {
-    print("Solution ---> ${solution.toString()}");
+    print("Solución encontrada:");
+    for (final variable in solution.getVariables()) {
+      final value = solution.getValue(variable);
+      if (value != null) {
+        print("${variable.model} asignado a ${value.model}");
+      }
+    }
   } else {
-    print("Partial solution ---> ${solution.toString()}");
+    print("No se encontró una solución completa.");
   }
 }

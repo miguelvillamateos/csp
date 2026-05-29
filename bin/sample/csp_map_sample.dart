@@ -6,7 +6,7 @@ library;
 
 import '../core/csp.dart';
 
-void showMapSample() {
+void showMapSample({bool showLog = false}) {
   print("--------------------------------------------------------");
   print("Ejemplo de resolución del problema de coloreado de mapa");
   print("--------------------------------------------------------");
@@ -39,6 +39,16 @@ void showMapSample() {
     csp.setDomain(variable, domain);
   }
 
+  print("Listado de zonas (Variables):");
+  for (var v in csp.variables) {
+    print(" - ${v.model}");
+  }
+
+  print("\nListado de colores (Valores):");
+  for (var val in domain.values) {
+    print(" - ${val.model}");
+  }
+
   // Defeinición de las restricciones a aplicar a las variables/valores
   csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(WA, NT));
   csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(WA, SA));
@@ -49,6 +59,12 @@ void showMapSample() {
   csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(SA, V));
   csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(Q, NSW));
   csp.addConstraint(NotEqualConstraint<CspVariable, CspValue<String>>(NSW, V));
+
+  print("\nListado de restricciones:");
+  for (var c in csp.constraints) {
+    print(" - $c");
+  }
+  print("");
 
   // Se establecen como condiciones adicionales un color para  dos zonas
   csp.setDomain(SA, CspDomain<CspValue<String>>(values: [RED]));
@@ -71,15 +87,22 @@ void showMapSample() {
       FlexibleBacktrackingSolver(
           heuristics: heuristics, inferenceStrategy: ac3strategy);
 
-  CspListener<CspVariable, CspValue<String>> listener =
-      CspListener<CspVariable, CspValue<String>>();
-
-  solver.addCspListener(listener);
+  if (showLog) {
+    CspListener<CspVariable, CspValue<String>> listener =
+        CspListener<CspVariable, CspValue<String>>();
+    solver.addCspListener(listener);
+  }
 
   CspAssignment solution = solver.solve(csp);
   if (solution.isSolution(csp)) {
-    print("Solution ---> ${solution.toString()}");
+    print("Solución encontrada:");
+    for (final variable in solution.getVariables()) {
+      final value = solution.getValue(variable);
+      if (value != null) {
+        print("${variable.model} asignado a ${value.model}");
+      }
+    }
   } else {
-    print("Partial solution ---> ${solution.toString()}");
+    print("No se encontró una solución completa.");
   }
 }

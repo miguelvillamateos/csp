@@ -12,7 +12,6 @@ class LeastConstrainingValueHeuristic<VAR extends CspVariable, VAL extends CspVa
   @override
   List<VAL> apply(
       Csp<VAR, VAL> csp, CspAssignment<VAR, VAL> assignment, VAR variable) {
-    print(" LeastConstrainingValueHeuristic apply --->");
     List<Pair<VAL, int>> pairs = [];
     for (VAL value in csp.getDomain(variable).values) {
       int num = countLostValues(csp, assignment, variable, value);
@@ -20,8 +19,6 @@ class LeastConstrainingValueHeuristic<VAR extends CspVariable, VAL extends CspVa
     }
 
     pairs.sort((a, b) => a.getSecond().compareTo(b.getSecond()));
-
-    print(" Pares [${pairs.length}]: ${pairs.toString()}");
 
     List<VAL> result = [];
     pairs.every((p) {

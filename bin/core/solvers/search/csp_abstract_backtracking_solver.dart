@@ -20,15 +20,11 @@ abstract class AbstractBacktrackingSolver<VAR extends CspVariable, VAL extends C
   CspAssignment<VAR, VAL> backtrack(
       Csp<VAR, VAL> csp, CspAssignment<VAR, VAL> assignment) {
     CspAssignment<VAR, VAL> result = CspAssignment<VAR, VAL>();
-    print("backtrack -->");
 
     if (assignment.isComplete(csp.variables)) {
-      print("${assignment.toString()} --> is complete");
       result = assignment;
     } else {
-      print("${assignment.toString()} --> is not Complete");
       VAR variable = selectUnassignedVariable(csp, assignment);
-      print(" Selecting --> $variable");
       for (VAL value in orderDomainValues(csp, assignment, variable)) {
         assignment.add(variable, value);
         fireStateChanged(csp, assignment, variable, "Added ($variable,$value)");

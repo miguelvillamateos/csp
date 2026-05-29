@@ -5,6 +5,7 @@ library;
 import 'package:args/args.dart';
 import 'sample/csp_map_sample.dart';
 import 'sample/csp_gantt_sample.dart';
+import 'sample/csp_seat_path_sample.dart';
 
 const String version = '0.0.1';
 
@@ -26,6 +27,12 @@ ArgParser buildParser() {
       'version',
       negatable: false,
       help: 'Print the tool version.',
+    )
+    ..addFlag(
+      'verbose',
+      abbr: 'v',
+      negatable: false,
+      help: 'Show search log.',
     );
 }
 
@@ -34,13 +41,16 @@ void printUsage(ArgParser argParser) {
   print(argParser.usage);
 }
 
-void showSample(String id) {
+void showSample(String id, {bool verbose = false}) {
   switch (id) {
     case '1':
-      showMapSample();
+      showMapSample(showLog: verbose);
       break;
     case '2':
-      showGanttSample();
+      showGanttSample(showLog: verbose);
+      break;
+    case '3':
+      showSeatPathSample(showLog: verbose);
       break;
     default:
       print("Invalid example number");
@@ -64,7 +74,7 @@ void main(List<String> arguments) {
     }
     if (results.wasParsed('example')) {
       if (results.rest.isNotEmpty) {
-        showSample(results.rest[0]);
+        showSample(results.rest[0], verbose: results.wasParsed('verbose'));
         return;
       } else {
         print('Missing example id');

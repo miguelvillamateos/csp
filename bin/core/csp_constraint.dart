@@ -14,5 +14,5 @@ class CspConstraint<VAR extends CspVariable, VAL extends CspValue> {
     return true;
   }
 
-  CspConstraint();
+
 }

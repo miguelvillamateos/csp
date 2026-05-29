@@ -28,14 +28,12 @@ class FlexibleBacktrackingSolver<VAR extends CspVariable, VAL extends CspValue>
     List<VAR> vars =
         csp.variables.where((v) => !assignment.contains(v)).toList();
     vars = heuristics.variableSelectionStrategy.apply(csp, vars);
-    print("selectUnassignedVariable --> ${vars[0].toString()}");
     return vars[0];
   }
 
   @override
   List<VAL> orderDomainValues(
       Csp<VAR, VAL> csp, CspAssignment<VAR, VAL> assignment, VAR variable) {
-    print("orderDomainValues --> ");
     return heuristics.valueOrderingStrategy.apply(csp, assignment, variable);
   }
 
